@@ -91,8 +91,8 @@ export default function ResumeInput({ onAnalyze, loading }) {
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
                     className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${isDragging
-                            ? "border-[#14B8A6] bg-[#14B8A6]/[0.06]"
-                            : "border-white/10"
+                        ? "border-[#14B8A6] bg-[#14B8A6]/[0.06]"
+                        : "border-white/10"
                         }`}
                 >
                     <input
@@ -119,7 +119,7 @@ export default function ResumeInput({ onAnalyze, loading }) {
 
             <div>
                 <label className="block text-xs text-[#8A8F8B] mb-1.5">
-                    Job description <span className="text-[#6E6A64]">(optional)</span>
+                    Job description <span className="text-[#6E6A64]">(optional but recommended)</span>
                 </label>
                 <textarea
                     rows={4}
