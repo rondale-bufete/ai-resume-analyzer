@@ -7,15 +7,35 @@ export default function ResumeInput({ onAnalyze, loading }) {
     const [resumeText, setResumeText] = useState("");
     const [file, setFile] = useState(null);
     const [jobDescription, setJobDescription] = useState("");
+    const [isDragging, setIsDragging] = useState(false);
 
-    function handleFileChange(e) {
-        const selected = e.target.files?.[0];
+    function validateAndSetFile(selected) {
         if (selected && selected.type === "application/pdf") {
             setFile(selected);
         } else if (selected) {
             alert("Please upload a PDF file.");
-            e.target.value = "";
         }
+    }
+
+    function handleFileChange(e) {
+        validateAndSetFile(e.target.files?.[0]);
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        setIsDragging(true);
+    }
+
+    function handleDragLeave(e) {
+        e.preventDefault();
+        setIsDragging(false);
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        setIsDragging(false);
+        const dropped = e.dataTransfer.files?.[0];
+        validateAndSetFile(dropped);
     }
 
     function handleSubmit(e) {
@@ -66,7 +86,15 @@ export default function ResumeInput({ onAnalyze, loading }) {
                     className="w-full px-3 py-2.5 rounded-lg bg-[#0F1210] border border-white/10 text-[#EDECE9] focus:outline-none focus:border-[#14B8A6] font-mono text-xs resize-y placeholder:text-[#6E6A64]"
                 />
             ) : (
-                <div className="border-2 border-dashed border-white/10 rounded-lg p-6 text-center">
+                <div
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${isDragging
+                            ? "border-[#14B8A6] bg-[#14B8A6]/[0.06]"
+                            : "border-white/10"
+                        }`}
+                >
                     <input
                         type="file"
                         accept="application/pdf"
@@ -74,14 +102,17 @@ export default function ResumeInput({ onAnalyze, loading }) {
                         id="resume-file"
                         className="hidden"
                     />
-                    <label htmlFor="resume-file" className="cursor-pointer">
-                        <p className="text-sm text-[#8A8F8B]">
-                            {file ? (
-                                <span className="text-[#EDECE9] font-medium break-all">{file.name}</span>
-                            ) : (
-                                "Click to choose a PDF"
-                            )}
-                        </p>
+                    <label htmlFor="resume-file" className="cursor-pointer block">
+                        {file ? (
+                            <p className="text-sm text-[#EDECE9] font-medium break-all">📄 {file.name}</p>
+                        ) : (
+                            <>
+                                <p className="text-2xl mb-2">{isDragging ? "📥" : "📎"}</p>
+                                <p className="text-sm text-[#8A8F8B]">
+                                    {isDragging ? "Drop your PDF here" : "Click to choose a PDF, or drag one here"}
+                                </p>
+                            </>
+                        )}
                     </label>
                 </div>
             )}
