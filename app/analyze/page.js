@@ -62,10 +62,9 @@ export default function AnalyzePage() {
             </header>
 
             <div className="max-w-7xl mx-auto px-6 py-10 grid lg:grid-cols-[380px_1fr] gap-8">
-                <div className="lg:sticky lg:top-10 lg:self-start">
-                    <p className="font-[family-name:var(--font-display)] text-2xl font-medium tracking-tight mb-2">
-                        Get instant feedback
-                    </p>
+                <div id="resume-input-panel" className="lg:sticky lg:top-10 lg:self-start">                    <p className="font-[family-name:var(--font-display)] text-2xl font-medium tracking-tight mb-2">
+                    Get instant feedback
+                </p>
                     <p className="text-sm text-[#8A8F8B] mb-6 leading-relaxed">
                         Upload or paste your resume. Add a job description to get a match score and gap analysis.
                     </p>
