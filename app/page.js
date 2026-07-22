@@ -141,7 +141,10 @@ export default function LandingPage() {
       </section>
 
       <footer className="border-t border-white/[0.06] px-6 py-8 text-center">
-        <p className="text-xs text-[#6E6A64]">Built with Next.js and Google Gemini.</p>
+        <p className="text-xs text-[#6E6A64] max-w-md mx-auto leading-relaxed">
+          Built with Next.js and Google Gemini. Feedback is AI-generated and may be inaccurate — treat
+          it as a starting point, not a final verdict. Resumes are analyzed on-demand and are not stored.
+        </p>
       </footer>
     </main>
   );

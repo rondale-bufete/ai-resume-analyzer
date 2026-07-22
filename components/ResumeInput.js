@@ -137,6 +137,11 @@ export default function ResumeInput({ onAnalyze, loading }) {
             >
                 {loading ? "Analyzing..." : "Analyze Resume"}
             </button>
+
+            <p className="text-xs text-[#6E6A64] leading-relaxed text-center">
+                AI-generated feedback may be inaccurate. Your resume isn&rsquo;t stored — it&rsquo;s sent to
+                Google Gemini for analysis only.
+            </p>
         </form>
     );
 }
