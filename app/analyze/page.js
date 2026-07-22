@@ -21,7 +21,15 @@ export default function AnalyzePage() {
                 body: formData,
             });
 
-            const data = await res.json();
+            const rawText = await res.text();
+            console.log("Raw response:", rawText);
+
+            let data;
+            try {
+                data = JSON.parse(rawText);
+            } catch {
+                throw new Error(`Server returned non-JSON response: ${rawText.slice(0, 200)}`);
+            }
 
             if (!res.ok) {
                 throw new Error(data.error || "Analysis failed");
