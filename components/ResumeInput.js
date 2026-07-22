@@ -2,12 +2,43 @@
 
 import { useState } from "react";
 
+const SAMPLE_RESUME = `John Doe
+john.doe@email.com | (555) 012-3456 | linkedin.com/in/johndoe
+
+SUMMARY
+Frontend developer with 2 years of experience building web applications using React and Next.js. Passionate about clean UI and performance.
+
+EXPERIENCE
+Junior Frontend Developer — Company X Inc.
+June 2023 - Present
+- Worked on the company website using React
+- Fixed bugs and helped with new features
+- Collaborated with the design team
+
+Freelance Web Developer
+January 2022 - May 2023
+- Built websites for small businesses
+- Used HTML, CSS, and JavaScript
+
+EDUCATION
+BS in Computer Science
+State University, 2022
+
+SKILLS
+JavaScript, React, HTML, CSS, Git, Figma`;
+
 export default function ResumeInput({ onAnalyze, loading }) {
     const [inputMode, setInputMode] = useState("paste");
     const [resumeText, setResumeText] = useState("");
     const [file, setFile] = useState(null);
     const [jobDescription, setJobDescription] = useState("");
     const [isDragging, setIsDragging] = useState(false);
+
+    function handleUseSample() {
+        setInputMode("paste");
+        setFile(null);
+        setResumeText(SAMPLE_RESUME);
+    }
 
     function validateAndSetFile(selected) {
         if (selected && selected.type === "application/pdf") {
@@ -90,9 +121,7 @@ export default function ResumeInput({ onAnalyze, loading }) {
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
-                    className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${isDragging
-                        ? "border-[#14B8A6] bg-[#14B8A6]/[0.06]"
-                        : "border-white/10"
+                    className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${isDragging ? "border-[#14B8A6] bg-[#14B8A6]/[0.06]" : "border-white/10"
                         }`}
                 >
                     <input
@@ -117,9 +146,17 @@ export default function ResumeInput({ onAnalyze, loading }) {
                 </div>
             )}
 
+            <button
+                type="button"
+                onClick={handleUseSample}
+                className="text-xs text-[#14B8A6] hover:underline"
+            >
+                Try with a sample resume →
+            </button>
+
             <div>
                 <label className="block text-xs text-[#8A8F8B] mb-1.5">
-                    Job description <span className="text-[#6E6A64]">(optional but recommended)</span>
+                    Job description <span className="text-[#6E6A64]">(optional)</span>
                 </label>
                 <textarea
                     rows={4}
