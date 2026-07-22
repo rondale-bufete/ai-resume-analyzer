@@ -1,98 +1,148 @@
-"use client";
+import Link from "next/link";
 
-import { useState } from "react";
-import ResumeInput from "@/components/ResumeInput";
-import AnalysisResults from "@/components/AnalysisResults";
+const STEPS = [
+  {
+    number: "01",
+    title: "Submit your resume",
+    description: "Paste your resume text or upload a PDF — your choice.",
+  },
+  {
+    number: "02",
+    title: "Add a job description",
+    description: "Optional. Paste a listing to get a tailored match score and skill gap analysis.",
+  },
+  {
+    number: "03",
+    title: "Get structured feedback",
+    description: "Scores, section-by-section notes, and specific rewrite suggestions — not generic tips.",
+  },
+];
 
-export default function Home() {
-  const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+const FEATURES = [
+  {
+    title: "ATS risk detection",
+    description: "Flags formatting and structure issues that could cause parsing failures in applicant tracking systems.",
+  },
+  {
+    title: "Job match scoring",
+    description: "Compares your resume against a specific job description and highlights matching and missing skills.",
+  },
+  {
+    title: "Rewrite suggestions",
+    description: "Specific before-and-after rewrites for weak bullet points, with the reasoning behind each change.",
+  },
+  {
+    title: "Section-by-section notes",
+    description: "Feedback broken down by resume section, rather than one generic overall comment.",
+  },
+];
 
-  async function handleAnalyze(formData) {
-    setLoading(true);
-    setError(null);
-    setResult(null);
-
-    try {
-      const res = await fetch("/api/analyze", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Analysis failed");
-      }
-
-      setResult(data.result);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
+export default function LandingPage() {
   return (
     <main className="min-h-screen">
       <header className="border-b border-white/[0.06] px-6 py-5">
-        <div className="max-w-7xl mx-auto flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-md bg-[#14B8A6] flex items-center justify-center">
-            <span className="text-[#0F1210] text-sm font-bold">R</span>
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-md bg-[#14B8A6] flex items-center justify-center">
+              <span className="text-[#0F1210] text-sm font-bold">R</span>
+            </div>
+            <span className="font-[family-name:var(--font-display)] text-lg tracking-tight">
+              Resume Analyzer
+            </span>
           </div>
-          <h1 className="font-[family-name:var(--font-display)] text-lg tracking-tight">
-            Resume Analyzer
-          </h1>
+          <Link
+            href="/analyze"
+            className="text-sm font-medium px-4 py-2 rounded-md bg-[#14B8A6] text-[#0F1210] hover:bg-[#2dd4bf] transition-colors"
+          >
+            Try it
+          </Link>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-6 py-10 grid lg:grid-cols-[380px_1fr] gap-8">
-        {/* Left: sticky input panel */}
-        <div className="lg:sticky lg:top-10 lg:self-start">
-          <p className="font-[family-name:var(--font-display)] text-2xl font-medium tracking-tight mb-2">
-            Get instant feedback
+      {/* Hero */}
+      <section className="max-w-6xl mx-auto px-6 pt-20 pb-24 text-center">
+        <p className="font-[family-name:var(--font-mono,monospace)] text-sm text-[#14B8A6] mb-4">
+          AI-powered resume review
+        </p>
+        <h1 className="font-[family-name:var(--font-display)] text-4xl md:text-6xl font-medium tracking-tight leading-[1.1] mb-6 max-w-3xl mx-auto">
+          Know exactly what to fix, before a recruiter does
+        </h1>
+        <p className="text-[#8A8F8B] text-lg leading-relaxed max-w-xl mx-auto mb-10">
+          Upload your resume, paste a job description, and get a structured breakdown of what&rsquo;s
+          working, what isn&rsquo;t, and how to say it better.
+        </p>
+        <Link
+          href="/analyze"
+          className="inline-block px-7 py-3 rounded-lg bg-[#14B8A6] text-[#0F1210] font-medium hover:bg-[#2dd4bf] transition-colors"
+        >
+          Analyze your resume
+        </Link>
+      </section>
+
+      {/* How it works */}
+      <section className="border-t border-white/[0.06] px-6 py-20">
+        <div className="max-w-6xl mx-auto">
+          <p className="font-[family-name:var(--font-mono,monospace)] text-sm text-[#14B8A6] mb-3">
+            How it works
           </p>
-          <p className="text-sm text-[#8A8F8B] mb-6 leading-relaxed">
-            Upload or paste your resume. Add a job description to get a match score and gap analysis.
-          </p>
+          <h2 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-medium tracking-tight mb-12 max-w-lg">
+            Three steps to a sharper resume
+          </h2>
 
-          <div className="bg-[#181C1A] border border-white/[0.06] rounded-xl p-5">
-            <ResumeInput onAnalyze={handleAnalyze} loading={loading} />
-          </div>
-
-          {error && (
-            <p className="mt-4 text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3">
-              {error}
-            </p>
-          )}
-        </div>
-
-        {/* Right: results */}
-        <div>
-          {!result && !loading && (
-            <div className="h-full min-h-[400px] flex items-center justify-center border border-dashed border-white/10 rounded-xl">
-              <div className="text-center px-6">
-                <p className="text-4xl mb-3">📄</p>
-                <p className="text-sm text-[#8A8F8B]">
-                  Your analysis will appear here once you submit a resume.
+          <div className="grid md:grid-cols-3 gap-8">
+            {STEPS.map((step) => (
+              <div key={step.number}>
+                <p className="font-[family-name:var(--font-display)] text-3xl text-white/10 mb-3">
+                  {step.number}
                 </p>
+                <h3 className="text-lg font-medium mb-2">{step.title}</h3>
+                <p className="text-sm text-[#8A8F8B] leading-relaxed">{step.description}</p>
               </div>
-            </div>
-          )}
-
-          {loading && (
-            <div className="h-full min-h-[400px] flex items-center justify-center border border-white/[0.06] rounded-xl bg-[#181C1A]">
-              <div className="text-center">
-                <div className="w-8 h-8 border-2 border-[#14B8A6] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                <p className="text-sm text-[#8A8F8B]">Analyzing your resume...</p>
-              </div>
-            </div>
-          )}
-
-          {result && !loading && <AnalysisResults result={result} />}
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* Features */}
+      <section className="border-t border-white/[0.06] px-6 py-20">
+        <div className="max-w-6xl mx-auto">
+          <p className="font-[family-name:var(--font-mono,monospace)] text-sm text-[#14B8A6] mb-3">
+            What you get
+          </p>
+          <h2 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-medium tracking-tight mb-12 max-w-lg">
+            Specific feedback, not generic advice
+          </h2>
+
+          <div className="grid sm:grid-cols-2 gap-4">
+            {FEATURES.map((feature) => (
+              <div
+                key={feature.title}
+                className="bg-[#181C1A] border border-white/[0.06] rounded-xl p-6 hover:border-[#14B8A6]/30 transition-colors"
+              >
+                <h3 className="text-base font-medium mb-2">{feature.title}</h3>
+                <p className="text-sm text-[#8A8F8B] leading-relaxed">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Closing CTA */}
+      <section className="border-t border-white/[0.06] px-6 py-20 text-center">
+        <h2 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-medium tracking-tight mb-6">
+          Ready to see where your resume stands?
+        </h2>
+        <Link
+          href="/analyze"
+          className="inline-block px-7 py-3 rounded-lg bg-[#14B8A6] text-[#0F1210] font-medium hover:bg-[#2dd4bf] transition-colors"
+        >
+          Analyze your resume
+        </Link>
+      </section>
+
+      <footer className="border-t border-white/[0.06] px-6 py-8 text-center">
+        <p className="text-xs text-[#6E6A64]">Built with Next.js and Google Gemini.</p>
+      </footer>
     </main>
   );
 }
