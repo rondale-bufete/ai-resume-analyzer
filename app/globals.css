@@ -1,8 +1,35 @@
 @import "tailwindcss";
 
+/* Design tokens — every color in the app comes from here (bg-surface, text-muted, bg-accent…). */
+@theme {
+	--color-bg: #0b110d;
+	--color-surface: #131b16;
+	--color-surface-raised: #19231d;
+	--color-line: rgb(255 255 255 / 0.07);
+	--color-ink: #e8efe9;
+	--color-ink-soft: #b4c2b7;
+	--color-muted: #94a398;
+	--color-accent: #22c55e;
+	--color-accent-hover: #4ade80;
+	--color-on-accent: #03170a;
+	--color-good: #4ade80;
+	--color-fair: #fbbf24;
+	--color-poor: #f87171;
+}
+
+@theme inline {
+	--font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+	--font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+	--font-mono: ui-monospace, "JetBrains Mono", SFMono-Regular, Menlo, monospace;
+}
+
 body {
-	color: #edece9;
-	background: #0f1210;
+	background: var(--color-bg);
+	color: var(--color-ink);
+}
+
+::selection {
+	background: rgb(34 197 94 / 0.35);
 }
 
 @keyframes borderGlow {
@@ -25,7 +52,7 @@ body {
 	inset: -1px;
 	border-radius: inherit;
 	padding: 1px;
-	background: linear-gradient(120deg, #14b8a6, transparent, #14b8a6);
+	background: linear-gradient(120deg, var(--color-accent), transparent, var(--color-accent));
 	-webkit-mask:
 		linear-gradient(#000 0 0) content-box,
 		linear-gradient(#000 0 0);
@@ -33,4 +60,68 @@ body {
 	mask-composite: exclude;
 	animation: borderGlow 3s ease-in-out infinite;
 	pointer-events: none;
+}
+
+/* Score visuals fill from empty on mount; --gauge-empty is set per gauge. */
+@keyframes gaugeFill {
+	from {
+		stroke-dashoffset: var(--gauge-empty);
+	}
+}
+
+.gauge-arc {
+	animation: gaugeFill 0.9s ease-out;
+}
+
+@keyframes barFill {
+	from {
+		transform: scaleX(0);
+	}
+}
+
+.bar-fill {
+	transform-origin: left;
+	animation: barFill 0.7s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.glow-border::before {
+		animation: none;
+		opacity: 0.6;
+	}
+
+	.gauge-arc,
+	.bar-fill {
+		animation: none;
+	}
+}
+
+/* Printed / "Save as PDF" report: light paper colors, no chrome. */
+@media print {
+	:root {
+		--color-bg: #ffffff;
+		--color-surface: #ffffff;
+		--color-surface-raised: #f4f7f5;
+		--color-line: #d5ddd7;
+		--color-ink: #0b110d;
+		--color-ink-soft: #26332a;
+		--color-muted: #46544a;
+		--color-accent: #15803d;
+		--color-good: #15803d;
+		--color-fair: #a16207;
+		--color-poor: #b91c1c;
+	}
+
+	.glow-border::before {
+		display: none;
+	}
+
+	.gauge-arc,
+	.bar-fill {
+		animation: none;
+	}
+
+	.print-avoid-break {
+		break-inside: avoid;
+	}
 }

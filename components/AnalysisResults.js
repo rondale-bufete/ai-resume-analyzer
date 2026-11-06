@@ -1,140 +1,114 @@
+import { Pencil, Printer } from "lucide-react";
 import ScoreGauge from "./ScoreGauge";
+import ScoreBreakdown from "./results/ScoreBreakdown";
+import AtsIssues from "./results/AtsIssues";
+import JobMatch from "./results/JobMatch";
+import RewriteSuggestions from "./results/RewriteSuggestions";
+import { buttonSecondary, card, sectionTitle } from "./ui";
 
-export default function AnalysisResults({ result }) {
-    const {
-        overallScore,
-        summary,
-        strengths,
-        weaknesses,
-        atsIssues,
-        sections,
-        rewriteSuggestions,
-        jobMatch,
-    } = result;
+function PointList({ title, items, marker, tone }) {
+    return (
+        <section aria-label={title} className={`${card} print-avoid-break p-5`}>
+            <h3 className={`mb-3 text-sm font-medium ${tone}`}>{title}</h3>
+            {items.length ? (
+                <ul className="space-y-2">
+                    {items.map((item, i) => (
+                        <li key={i} className="flex gap-2 text-sm text-ink-soft">
+                            <span aria-hidden="true" className={`shrink-0 ${tone}`}>
+                                {marker}
+                            </span>
+                            {item}
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p className="text-sm text-muted">Nothing to note.</p>
+            )}
+        </section>
+    );
+}
+
+export default function AnalysisResults({
+    result,
+    meta,
+    previousRun,
+    jobDescription,
+    canApply,
+    appliedIndexes,
+    onApplyRewrite,
+    onEdit,
+    headingRef,
+}) {
+    const { overallScore, scoreBreakdown, summary, strengths, weaknesses, atsIssues, sections, rewriteSuggestions, jobMatch } =
+        result;
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <p className="text-xs text-[#6E6A64]">Analysis complete</p>
-                <a
-                    href="#resume-input-panel"
-                    className="text-xs text-[#14B8A6] hover:underline"
-                >
-                    ↑ Edit & re-analyze
-                </a>
-            </div>
-
-            <div className="glow-border bg-[#181C1A] border border-white/[0.06] rounded-xl p-6 flex flex-col sm:flex-row items-center gap-6">                <ScoreGauge score={overallScore} label="Overall Score" />
-                {jobMatch && <ScoreGauge score={jobMatch.matchScore} label="Job Match" />}
-                <p className="text-sm text-[#D2D2D2] leading-relaxed sm:flex-1">{summary}</p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-[#181C1A] border border-white/[0.06] rounded-xl p-5">
-                    <h3 className="text-sm font-medium text-green-400 mb-3">Strengths</h3>
-                    <ul className="space-y-2">
-                        {strengths.map((s, i) => (
-                            <li key={i} className="text-sm text-[#D2D2D2] flex gap-2">
-                                <span className="text-green-400 shrink-0">+</span>
-                                {s}
-                            </li>
-                        ))}
-                    </ul>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                    <h2 ref={headingRef} tabIndex={-1} className="font-display text-xl font-medium tracking-tight outline-none">
+                        Resume analysis
+                    </h2>
+                    <p className="text-xs text-muted">
+                        {meta.label} · {new Date(meta.createdAt).toLocaleString()}
+                    </p>
                 </div>
-
-                <div className="bg-[#181C1A] border border-white/[0.06] rounded-xl p-5">
-                    <h3 className="text-sm font-medium text-amber-400 mb-3">Weaknesses</h3>
-                    <ul className="space-y-2">
-                        {weaknesses.map((w, i) => (
-                            <li key={i} className="text-sm text-[#D2D2D2] flex gap-2">
-                                <span className="text-amber-400 shrink-0">−</span>
-                                {w}
-                            </li>
-                        ))}
-                    </ul>
+                <div className="flex gap-2 print:hidden">
+                    <button type="button" onClick={onEdit} className={`${buttonSecondary} min-h-10 px-3 text-sm`}>
+                        <Pencil aria-hidden="true" className="h-4 w-4" />
+                        Edit &amp; re-analyze
+                    </button>
+                    <button type="button" onClick={() => window.print()} className={`${buttonSecondary} min-h-10 px-3 text-sm`}>
+                        <Printer aria-hidden="true" className="h-4 w-4" />
+                        Print / Save PDF
+                    </button>
                 </div>
             </div>
 
-            {
-                atsIssues.length > 0 && (
-                    <div className="bg-red-500/[0.05] border border-red-500/20 rounded-xl p-5">
-                        <h3 className="text-sm font-medium text-red-400 mb-3">⚠ ATS Formatting Risks</h3>
-                        <ul className="space-y-2">
-                            {atsIssues.map((issue, i) => (
-                                <li key={i} className="text-sm text-[#D2D2D2]">
-                                    • {issue}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                )
-            }
+            <section
+                aria-label="Scores"
+                className={`glow-border ${card} print-avoid-break flex flex-col items-center gap-6 p-6 sm:flex-row`}
+            >
+                <ScoreGauge score={overallScore} label="Overall score" previousScore={previousRun?.overallScore} />
+                {jobMatch && (
+                    <ScoreGauge score={jobMatch.matchScore} label="Job match" previousScore={previousRun?.matchScore} />
+                )}
+                <p className="text-sm leading-relaxed text-ink-soft sm:flex-1">{summary}</p>
+            </section>
 
-            {
-                jobMatch && (
-                    <div className="bg-[#181C1A] border border-white/[0.06] rounded-xl p-5">
-                        <h3 className="text-sm font-medium text-[#14B8A6] mb-4">Job Match Detail</h3>
-                        <div className="grid md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <p className="text-xs text-[#6E6A64] mb-2">Matching Skills</p>
-                                <div className="flex flex-wrap gap-1.5">
-                                    {jobMatch.matchingSkills.map((skill) => (
-                                        <span key={skill} className="text-xs px-2 py-1 rounded bg-green-500/10 text-green-300">
-                                            {skill}
-                                        </span>
-                                    ))}
-                                </div>
+            <ScoreBreakdown breakdown={scoreBreakdown} />
+
+            <div className="grid gap-6 md:grid-cols-2">
+                <PointList title="Strengths" items={strengths} marker="+" tone="text-accent" />
+                <PointList title="Weaknesses" items={weaknesses} marker="−" tone="text-fair" />
+            </div>
+
+            <AtsIssues issues={atsIssues} />
+
+            {jobMatch && <JobMatch jobMatch={jobMatch} jobDescription={jobDescription} />}
+
+            {sections.length > 0 && (
+                <section aria-labelledby="sections-heading" className={`${card} p-5`}>
+                    <h3 id="sections-heading" className={`${sectionTitle} mb-4`}>
+                        Section-by-section feedback
+                    </h3>
+                    <div className="grid gap-x-6 gap-y-4 md:grid-cols-2">
+                        {sections.map((section, i) => (
+                            <div key={i} className="print-avoid-break border-b border-line pb-4 md:border-0 md:pb-0">
+                                <h4 className="mb-1 text-sm font-medium text-accent">{section.name}</h4>
+                                <p className="text-sm leading-relaxed text-ink-soft">{section.feedback}</p>
                             </div>
-                            <div>
-                                <p className="text-xs text-[#6E6A64] mb-2">Missing Skills</p>
-                                <div className="flex flex-wrap gap-1.5">
-                                    {jobMatch.missingSkills.map((skill) => (
-                                        <span key={skill} className="text-xs px-2 py-1 rounded bg-red-500/10 text-red-300">
-                                            {skill}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                        <p className="text-sm text-[#A29E97] leading-relaxed">{jobMatch.notes}</p>
+                        ))}
                     </div>
-                )
-            }
+                </section>
+            )}
 
-            <div className="bg-[#181C1A] border border-white/[0.06] rounded-xl p-5">
-                <h3 className="text-sm font-medium text-[#EDECE9] mb-4">Section-by-Section Feedback</h3>
-                <div className="grid md:grid-cols-2 gap-x-6 gap-y-4">
-                    {sections.map((section, i) => (
-                        <div key={i} className="pb-4 border-b border-white/[0.05] md:border-0 md:pb-0">
-                            <p className="text-sm font-medium text-[#14B8A6] mb-1">{section.name}</p>
-                            <p className="text-sm text-[#A29E97] leading-relaxed">{section.feedback}</p>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            {
-                rewriteSuggestions.length > 0 && (
-                    <div>
-                        <h3 className="text-sm font-medium text-[#EDECE9] mb-4">Suggested Rewrites</h3>
-                        <div className="grid md:grid-cols-2 gap-4">
-                            {rewriteSuggestions.map((r, i) => (
-                                <div key={i} className="bg-[#181C1A] border border-white/[0.06] rounded-xl p-5">
-                                    <div className="mb-3">
-                                        <p className="text-xs text-red-400 mb-1">Original</p>
-                                        <p className="text-sm text-[#A29E97] italic">&ldquo;{r.original}&rdquo;</p>
-                                    </div>
-                                    <div className="mb-3">
-                                        <p className="text-xs text-green-400 mb-1">Suggested</p>
-                                        <p className="text-sm text-[#EDECE9]">&ldquo;{r.suggested}&rdquo;</p>
-                                    </div>
-                                    <p className="text-xs text-[#6E6A64] leading-relaxed">{r.reason}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )
-            }
-        </div >
+            <RewriteSuggestions
+                suggestions={rewriteSuggestions}
+                canApply={canApply}
+                appliedIndexes={appliedIndexes}
+                onApply={onApplyRewrite}
+            />
+        </div>
     );
 }

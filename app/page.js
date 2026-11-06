@@ -1,151 +1,141 @@
 import Link from "next/link";
+import { BarChart3, FileText, Gauge, ScanSearch, Sparkles, Target } from "lucide-react";
+import SiteHeader from "@/components/SiteHeader";
+import PrivacyNote from "@/components/PrivacyNote";
+import { buttonPrimary } from "@/components/ui";
 
 const STEPS = [
   {
     number: "01",
     title: "Submit your resume",
-    description: "Paste your resume text or upload a PDF — your choice.",
+    description: "Paste the text, or upload a PDF or Word file.",
   },
   {
     number: "02",
     title: "Add a job description",
-    description: "Optional. Paste a listing to get a tailored match score and skill gap analysis.",
+    description: "Optional. Paste a listing to get a match score, skill gaps and tailored wording.",
   },
   {
     number: "03",
-    title: "Get structured feedback",
-    description: "Scores, section-by-section notes, and specific rewrite suggestions — not generic tips.",
+    title: "Fix it and re-check",
+    description: "Apply suggested rewrites in one click, re-analyze and watch your score change.",
   },
 ];
 
 const FEATURES = [
   {
+    icon: Gauge,
+    title: "Score breakdown",
+    description: "See why you got your score: impact, clarity, ATS formatting and keywords, each rated.",
+  },
+  {
+    icon: ScanSearch,
     title: "ATS risk detection",
-    description: "Flags formatting and structure issues that could cause parsing failures in applicant tracking systems.",
+    description: "Flags formatting and structure issues that can break applicant tracking systems, ranked by severity.",
   },
   {
-    title: "Job match scoring",
-    description: "Compares your resume against a specific job description and highlights matching and missing skills.",
+    icon: Target,
+    title: "Job match and keyword map",
+    description: "Highlights which keywords from the job post your resume covers and which are missing.",
   },
   {
-    title: "Rewrite suggestions",
-    description: "Specific before-and-after rewrites for weak bullet points, with the reasoning behind each change.",
+    icon: Sparkles,
+    title: "One-click rewrites",
+    description: "Before-and-after rewrites for weak lines, with the reasoning. Copy them or apply them straight to your text.",
   },
   {
-    title: "Section-by-section notes",
-    description: "Feedback broken down by resume section, rather than one generic overall comment.",
+    icon: FileText,
+    title: "Tailored summary and cover letter opener",
+    description: "Wording aimed at the job you pasted, built only from what your resume already says.",
+  },
+  {
+    icon: BarChart3,
+    title: "Progress you can see",
+    description: "Recent results stay in your browser, so you can compare runs and print a clean report.",
   },
 ];
 
 export default function LandingPage() {
   return (
-    <main className="min-h-screen">
-      <header className="border-b border-white/[0.06] px-6 py-5">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-md bg-[#14B8A6] flex items-center justify-center">
-              <span className="text-[#0F1210] text-sm font-bold">R</span>
-            </div>
-            <span className="font-[family-name:var(--font-display)] text-lg tracking-tight">
-              Resume Analyzer
-            </span>
-          </div>
-          <Link
-            href="/analyze"
-            className="text-sm font-medium px-4 py-2 rounded-md bg-[#14B8A6] text-[#0F1210] hover:bg-[#2dd4bf] transition-colors"
-          >
+    <>
+      <SiteHeader
+        action={
+          <Link href="/analyze" className={`${buttonPrimary} px-4 py-2 text-sm`}>
             Try it
           </Link>
-        </div>
-      </header>
+        }
+      />
 
-      {/* Hero */}
-      <section className="max-w-6xl mx-auto px-6 pt-20 pb-24 text-center">
-        <p className="font-[family-name:var(--font-mono,monospace)] text-sm text-[#14B8A6] mb-4">
-          AI-powered resume review
-        </p>
-        <h1 className="font-[family-name:var(--font-display)] text-4xl md:text-6xl font-medium tracking-tight leading-[1.1] mb-6 max-w-3xl mx-auto">
-          Know exactly what to fix, before a recruiter does
-        </h1>
-        <p className="text-[#8A8F8B] text-lg leading-relaxed max-w-xl mx-auto mb-10">
-          Upload your resume, paste a job description, and get a structured breakdown of what&rsquo;s
-          working, what isn&rsquo;t, and how to say it better.
-        </p>
-        <Link
-          href="/analyze"
-          className="inline-block px-7 py-3 rounded-lg bg-[#14B8A6] text-[#0F1210] font-medium hover:bg-[#2dd4bf] transition-colors"
-        >
-          Analyze your resume
-        </Link>
-      </section>
-
-      {/* How it works */}
-      <section className="border-t border-white/[0.06] px-6 py-20">
-        <div className="max-w-6xl mx-auto">
-          <p className="font-[family-name:var(--font-mono,monospace)] text-sm text-[#14B8A6] mb-3">
-            How it works
+      <main>
+        <section className="mx-auto max-w-6xl px-4 pb-24 pt-20 text-center sm:px-6">
+          <p className="mb-4 font-mono text-sm text-accent">AI-powered resume review</p>
+          <h1 className="mx-auto mb-6 max-w-3xl font-display text-[clamp(2.25rem,6vw,3.75rem)] font-medium leading-[1.1] tracking-tight">
+            Know exactly what to fix, before a recruiter does
+          </h1>
+          <p className="mx-auto mb-10 max-w-xl text-lg leading-relaxed text-ink-soft">
+            Upload your resume, paste a job description, and get a structured breakdown of what&rsquo;s working, what
+            isn&rsquo;t, and how to say it better.
           </p>
-          <h2 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-medium tracking-tight mb-12 max-w-lg">
-            Three steps to a sharper resume
-          </h2>
+          <Link href="/analyze" className={`${buttonPrimary} px-7 py-3`}>
+            Analyze your resume
+          </Link>
+        </section>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {STEPS.map((step) => (
-              <div key={step.number}>
-                <p className="font-[family-name:var(--font-display)] text-3xl text-white/10 mb-3">
-                  {step.number}
-                </p>
-                <h3 className="text-lg font-medium mb-2">{step.title}</h3>
-                <p className="text-sm text-[#8A8F8B] leading-relaxed">{step.description}</p>
-              </div>
-            ))}
+        <section aria-labelledby="how-heading" className="border-t border-line px-4 py-20 sm:px-6">
+          <div className="mx-auto max-w-6xl">
+            <p className="mb-3 font-mono text-sm text-accent">How it works</p>
+            <h2 id="how-heading" className="mb-12 max-w-lg font-display text-2xl font-medium tracking-tight md:text-3xl">
+              Three steps to a sharper resume
+            </h2>
+            <ol className="grid gap-8 md:grid-cols-3">
+              {STEPS.map((step) => (
+                <li key={step.number}>
+                  <p aria-hidden="true" className="mb-3 font-display text-3xl text-accent/30">
+                    {step.number}
+                  </p>
+                  <h3 className="mb-2 text-lg font-medium">{step.title}</h3>
+                  <p className="text-sm leading-relaxed text-ink-soft">{step.description}</p>
+                </li>
+              ))}
+            </ol>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Features */}
-      <section className="border-t border-white/[0.06] px-6 py-20">
-        <div className="max-w-6xl mx-auto">
-          <p className="font-[family-name:var(--font-mono,monospace)] text-sm text-[#14B8A6] mb-3">
-            What you get
-          </p>
-          <h2 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-medium tracking-tight mb-12 max-w-lg">
-            Specific feedback, not generic advice
-          </h2>
-
-          <div className="grid sm:grid-cols-2 gap-4">
-            {FEATURES.map((feature) => (
-              <div
-                key={feature.title}
-                className="bg-[#181C1A] border border-white/[0.06] rounded-xl p-6 hover:border-[#14B8A6]/30 transition-colors"
-              >
-                <h3 className="text-base font-medium mb-2">{feature.title}</h3>
-                <p className="text-sm text-[#8A8F8B] leading-relaxed">{feature.description}</p>
-              </div>
-            ))}
+        <section aria-labelledby="features-heading" className="border-t border-line px-4 py-20 sm:px-6">
+          <div className="mx-auto max-w-6xl">
+            <p className="mb-3 font-mono text-sm text-accent">What you get</p>
+            <h2 id="features-heading" className="mb-12 max-w-lg font-display text-2xl font-medium tracking-tight md:text-3xl">
+              Specific feedback, not generic advice
+            </h2>
+            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {FEATURES.map(({ icon: Icon, title, description }) => (
+                <li
+                  key={title}
+                  className="rounded-xl border border-line bg-surface p-6 transition-colors hover:border-accent/30"
+                >
+                  <Icon aria-hidden="true" className="mb-4 h-5 w-5 text-accent" />
+                  <h3 className="mb-2 text-base font-medium">{title}</h3>
+                  <p className="text-sm leading-relaxed text-ink-soft">{description}</p>
+                </li>
+              ))}
+            </ul>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Closing CTA */}
-      <section className="border-t border-white/[0.06] px-6 py-20 text-center">
-        <h2 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-medium tracking-tight mb-6">
-          Ready to see where your resume stands?
-        </h2>
-        <Link
-          href="/analyze"
-          className="inline-block px-7 py-3 rounded-lg bg-[#14B8A6] text-[#0F1210] font-medium hover:bg-[#2dd4bf] transition-colors"
-        >
-          Analyze your resume
-        </Link>
-      </section>
+        <section className="border-t border-line px-4 py-20 text-center sm:px-6">
+          <h2 className="mb-6 font-display text-2xl font-medium tracking-tight md:text-3xl">
+            Ready to see where your resume stands?
+          </h2>
+          <Link href="/analyze" className={`${buttonPrimary} px-7 py-3`}>
+            Analyze your resume
+          </Link>
+        </section>
+      </main>
 
-      <footer className="border-t border-white/[0.06] px-6 py-8 text-center">
-        <p className="text-xs text-[#6E6A64] max-w-md mx-auto leading-relaxed">
-          Built with Next.js and Google Gemini. Feedback is AI-generated and may be inaccurate — treat
-          it as a starting point, not a final verdict. Resumes are analyzed on-demand and are not stored.
-        </p>
+      <footer className="border-t border-line px-4 py-8 text-center sm:px-6">
+        <p className="mb-2 text-xs text-muted">Built with Next.js and Google Gemini.</p>
+        <PrivacyNote className="mx-auto max-w-lg" />
       </footer>
-    </main>
+    </>
   );
 }
