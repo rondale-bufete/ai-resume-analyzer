@@ -168,7 +168,7 @@ export default function AnalyzePage() {
             />
 
             <main className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[400px_1fr] print:block print:p-0">
-                <div ref={inputPanelRef} className="scroll-mt-6 print:hidden">
+                <div ref={inputPanelRef} className="scroll-mt-6 print:hidden lg:sticky lg:top-6 lg:self-start">
                     <h1 className="mb-2 font-display text-2xl font-medium tracking-tight">Get instant feedback</h1>
                     <p className="mb-6 text-sm leading-relaxed text-ink-soft">
                         Upload or paste your resume. Add a job description to get a match score and gap analysis.
